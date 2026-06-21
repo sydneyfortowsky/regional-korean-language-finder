@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korean Regional Language Programs</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white py-12 px-6 shadow-md">
+        <div class="max-container max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl font-bold mb-3 tracking-tight">Regional Korean Language Programs</h1>
+            <p class="text-indigo-100 text-lg max-w-2xl mx-auto">Explore premium regional language programs across South Korea, featuring cost structures, housing metrics, and key selling points.</p>
+            <div class="mt-4 inline-block bg-indigo-900/40 text-indigo-200 text-xs px-3 py-1.5 rounded-full border border-indigo-500/30">
+                <i class="fa-solid fa-file-excel mr-1.5 text-green-400"></i> Powered by data from <span class="font-mono font-bold">Regional Language Universities.xlsx</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        
+        <!-- Controls & Filters -->
+        <div class="bg-white rounded-xl shadow-sm p-5 mb-8 border border-gray-100 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div class="w-full md:w-1/3 relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400"></i>
+                <input type="text" id="searchInput" oninput="filterUniversities()" placeholder="Search university or city..." class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+            </div>
+            <div class="w-full md:w-auto flex flex-wrap gap-3 items-center">
+                <label class="text-sm font-medium text-gray-500">Filter GKS Type B:</label>
+                <button onclick="filterGKS('all')" id="btn-all" class="px-4 py-2 text-xs font-semibold rounded-lg bg-indigo-600 text-white shadow-sm transition">All</button>
+                <button onclick="filterGKS('yes')" id="btn-yes" class="px-4 py-2 text-xs font-semibold rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Eligible Only</button>
+            </div>
+        </div>
+
+        <!-- University Grid Container -->
+        <div id="universityGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Cards will be dynamically injected here by JS -->
+        </div>
+
+        <!-- No Results State -->
+        <div id="noResults" class="hidden text-center py-16">
+            <i class="fa-solid fa-graduation-cap text-gray-300 text-5xl mb-3"></i>
+            <p class="text-gray-500 font-medium">No universities match your criteria.</p>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-6 mt-16 text-center text-xs text-gray-400">
+        <p>© 2026 Korean Regional Program Finder. Structured from local database files.</p>
+    </footer>
+
+    <!-- JavaScript Data and Logic -->
+    <script>
+        // Data systematically loaded from "Regional Language Universities.xlsx"
+        const universityData = [
+            {
+                name: "Chungnam National",
+                city: "Daejeon",
+                regionType: "Regional",
+                gksEligible: "yes",
+                allInclusive: "not mentioned",
+                tuition: 1400000,
+                appFee: 70000,
+                housingAvailable: "yes",
+                minHousing: 1400000,
+                maxHousing: 1400000,
+                housingDetails: "2 meals a day",
+                sellingPoint: "2hrs to Seoul - huge campus",
+                tuitionIncludes: "Not specified",
+                site: "https://dream.cnu.ac.kr/contents/kor_01.php",
+                insurance: 150000,
+                misc: "Tuition is only mentioned on the Korean site"
+            },
+            {
+                name: "Pusan/Busan National",
+                city: "Busan",
+                regionType: "Regional",
+                gksEligible: "yes",
+                allInclusive: "yes",
+                tuition: 1500000,
+                appFee: 80000,
+                housingAvailable: "yes",
+                minHousing: 750000,
+                maxHousing: 1500000,
+                housingDetails: "Jayoo Female: 1,500,000 (varies per semester) includes 3 meals a day; Woongbee Male: 1,300,000 (3 meals a day); off camp- Jinwoong: 750,000(double)/ 1,200,000(sing)",
+                sellingPoint: "Beach lifestyle; Top National University",
+                tuitionIncludes: "test taking, enrollment, books, cultural activites, etc., are included in tuition",
+                site: "https://lei.pusan.ac.kr/page?menuCD=000000000000207",
+                insurance: 80000,
+                misc: ""
+            },
+            {
+                name: "Honam University",
+                city: "Gwangju",
+                regionType: "Regional",
+                gksEligible: "no",
+                allInclusive: "not mentioned",
+                tuition: 1200000,
+                appFee: 60000,
+                housingAvailable: "yes",
+                minHousing: 1200000,
+                maxHousing: 1500000,
+                housingDetails: "Dorm4ppl/ 1,500,000(16weeks); Myeonhak hall(4ppl)/1,200,000; International hall (4ppl)/1,500,000",
+                sellingPoint: "60-70% tuition waiver for undergrad",
+                tuitionIncludes: "Not specified",
+                site: "https://global.honam.ac.kr/en/KoreanProgram",
+                insurance: 0,
+                misc: "Topik class: 240,000 for 2hrs a day for 4 weeks - 5x a day"
+            }
+        ];
+
+        let currentGksFilter = 'all';
+
+        function formatCurrency(amount) {
+            if (!amount || amount === 0) return 'N/A';
+            return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(amount);
+        }
+
+        function renderCards(data) {
+            const grid = document.getElementById('universityGrid');
+            const noResults = document.getElementById('noResults');
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            }
+            noResults.classList.add('hidden');
+
+            data.forEach(uni => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 overflow-hidden flex flex-col justify-between";
+                
+                // Highlight color badge based on tuition
+                const gksBadge = uni.gksEligible === 'yes' 
+                    ? `<span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-200"><i class="fa-solid fa-award mr-1"></i>GKS Type B</span>`
+                    : `<span class="bg-gray-100 text-gray-400 text-[10px] font-medium px-2 py-0.5 rounded">No GKS Type B</span>`;
+
+                card.innerHTML = `
+                    <div class="p-6">
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-2.5 py-1 rounded-md">
+                                <i class="fa-solid fa-location-dot mr-1"></i>${uni.city}
+                            </span>
+                            ${gksBadge}
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-2 leading-tight">${uni.name} University</h2>
+                        <p class="text-xs font-medium text-purple-600 mb-4 bg-purple-50 inline-block px-2 py-0.5 rounded"><i class="fa-solid fa-star mr-1"></i>${uni.sellingPoint}</p>
+                        
+                        <div class="space-y-3 pt-3 border-t border-gray-100 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Tuition / term</span>
+                                <span class="font-semibold text-gray-800">${formatCurrency(uni.tuition)}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Application Fee</span>
+                                <span class="font-medium text-gray-700">${formatCurrency(uni.appFee)}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Insurance Fee</span>
+                                <span class="font-medium text-gray-700">${uni.insurance ? formatCurrency(uni.insurance) : 'Not mentioned'}</span>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded-lg text-xs space-y-1.5 mt-2">
+                                <div class="text-gray-500 font-semibold"><i class="fa-solid fa-hotel mr-1 text-indigo-500"></i> Housing Costs:</div>
+                                <div class="text-gray-700 font-medium">${formatCurrency(uni.minHousing)} ~ ${formatCurrency(uni.maxHousing)}</div>
+                                <div class="text-gray-400 italic mt-1 line-clamp-2" title="${uni.housingDetails}">${uni.housingDetails}</div>
+                            </div>
+                            ${uni.tuitionIncludes !== 'Not specified' ? `
+                                <div class="text-xs bg-amber-50/60 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                                    <strong>Includes:</strong> ${uni.tuitionIncludes}
+                                </div>
+                            ` : ''}
+                            ${uni.misc ? `<div class="text-[11px] text-gray-400 mt-2"><i class="fa-solid fa-circle-info mr-1"></i>${uni.misc}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="p-4 bg-gray-50 border-t border-gray-100">
+                        <a href="${uni.site}" target="_blank" class="w-full bg-white hover:bg-indigo-600 text-indigo-600 hover:text-white border border-indigo-200 hover:border-indigo-600 transition text-center py-2 rounded-lg font-medium text-sm flex items-center justify-center gap-2">
+                            Visit Program Website <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterUniversities() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filtered = universityData.filter(uni => {
+                const matchesSearch = uni.name.toLowerCase().includes(query) || uni.city.toLowerCase().includes(query);
+                const matchesGks = currentGksFilter === 'all' || uni.gksEligible === currentGksFilter;
+                return matchesSearch && matchesGks;
+            });
+
+            renderCards(filtered);
+        }
+
+        function filterGks(type) {
+            currentGksFilter = type;
+            
+            // Toggle button states
+            const btnAll = document.getElementById('btn-all');
+            const btnYes = document.getElementById('btn-yes');
+
+            if (type === 'all') {
+                btnAll.className = "px-4 py-2 text-xs font-semibold rounded-lg bg-indigo-600 text-white shadow-sm transition";
+                btnYes.className = "px-4 py-2 text-xs font-semibold rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition";
+            } else {
+                btnYes.className = "px-4 py-2 text-xs font-semibold rounded-lg bg-indigo-600 text-white shadow-sm transition";
+                btnAll.className = "px-4 py-2 text-xs font-semibold rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition";
+            }
+
+            filterUniversities();
+        }
+
+        // Initialize display
+        renderCards(universityData);
+    </script>
+</body>
+</html>
